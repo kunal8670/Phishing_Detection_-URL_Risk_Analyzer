@@ -160,7 +160,7 @@ flowchart TB
 ### Step 1: Deploy
 
 ```bash
-cd phishing-detection
+cd Phishing_Detection_-URL_Risk_Analyzer
 docker compose up -d --build
 ```
 
