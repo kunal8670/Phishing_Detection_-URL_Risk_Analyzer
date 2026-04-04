@@ -1,0 +1,66 @@
+version: "3.8"
+
+services:
+  database:
+    image: postgres:16-alpine
+    container_name: phishing-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_NAME:-threats_db}
+      POSTGRES_USER: ${DB_USER:-threddb}
+      POSTGRES_PASSWORD: ${DB_PASS:-12345}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+      - ./backend/init_db.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "5433:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-threddb} -d ${DB_NAME:-threats_db}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - phishing-net
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: phishing-backend
+    restart: unless-stopped
+    environment:
+      DB_HOST: database
+      DB_PORT: 5432
+      DB_NAME: ${DB_NAME:-threats_db}
+      DB_USER: ${DB_USER:-threddb}
+      DB_PASS: ${DB_PASS:-12345}
+    volumes:
+      - model-data:/app/models
+    ports:
+      - "7777:8000"
+    depends_on:
+      database:
+        condition: service_healthy
+    networks:
+      - phishing-net
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: phishing-frontend
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    depends_on:
+      - backend
+    networks:
+      - phishing-net
+
+volumes:
+  pgdata:
+  model-data:
+
+networks:
+  phishing-net:
+    driver: bridge
