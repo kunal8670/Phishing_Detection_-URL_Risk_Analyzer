@@ -1,0 +1,15 @@
+__pycache__/
+*.pyc
+*.pyo
+.env
+venv/
+proenv/
+.git/
+.gitignore
+*.db
+data/
+outputs/
+node_modules/
+frontend/
+ml/
+phishing-detection/
