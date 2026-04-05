@@ -257,6 +257,49 @@ docker compose restart backend
 After connecting: **threats_db → Schemas → public → Tables → malicious_domains**
 
 ---
+
+## Troubleshooting
+
+### DNS Timeout During Build
+
+**Error:** `lookup registry-1.docker.io on 127.0.0.53:53: i/o timeout`
+
+**Cause:** VM's local DNS resolver (`systemd-resolved`) is unreachable or slow.
+
+**Fix:**
+```bash
+sudo mkdir -p /etc/docker
+sudo tee /etc/docker/daemon.json > /dev/null <<EOF
+{
+  "dns": ["8.8.8.8", "8.8.4.4"]
+}
+EOF
+sudo systemctl restart docker
+```
+
+### Containers Stuck in "Created" State
+
+**Symptom:** `docker compose ps` shows backend/frontend as `Created` but not `Up`.
+
+**Cause:** Slow VM hardware caused healthcheck timeout during `up -d --build`.
+
+**Fix:**
+```bash
+docker compose start backend frontend
+```
+
+### Backend Unhealthy After Start
+
+**Check logs:**
+```bash
+docker compose logs backend
+```
+
+**Common causes:**
+- ML model files missing → rebuild with `docker compose up -d --build --no-cache`
+- Database not ready → wait 30s for healthcheck, then `docker compose restart backend`
+
+---
 ##### © 2026 Kunal Harshad Patil  
 For more learning resources and updates, connect with me:  
 [GitHub](https://github.com/kunal8670) • [LinkedIn](https://www.linkedin.com/in/kunal-patil-8733b528a/)
