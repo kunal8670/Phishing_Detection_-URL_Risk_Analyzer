@@ -9,9 +9,7 @@ RUN pip install --no-cache-dir -r requirements.txt gunicorn
 
 COPY . .
 
-RUN mkdir -p models threat_intel
-
-COPY models/ /app/models/
+RUN mkdir -p threat_intel
 
 EXPOSE 8000
 

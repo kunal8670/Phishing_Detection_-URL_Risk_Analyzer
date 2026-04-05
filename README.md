@@ -7,7 +7,7 @@ A production-ready web application that analyzes URLs and evaluates phishing ris
 ## Project Structure
 
 ```
-phishing-detection/
+Phishing_Detection_-URL_Risk_Analyzer/
 ├── docker-compose.yml          # 3-service orchestration
 ├── .env                        # Environment variables
 ├── .env.example                # Environment template
@@ -178,6 +178,8 @@ phishing-db         Up (healthy)              0.0.0.0:5433->5432/tcp
 phishing-frontend   Up                        0.0.0.0:80->80/tcp
 ```
 
+All three services should show as running. Both `phishing-backend` and `phishing-db` should report `(healthy)`.
+
 ### Step 3: Populate Threat Database
 
 ```bash
@@ -224,10 +226,7 @@ docker compose restart backend
 ### Update Threat Intelligence
 
 ```bash
-# From host
-python backend/services/update_threat_db.py
-
-# Inside container
+# Inside container (recommended)
 docker compose exec backend python services/update_threat_db.py
 ```
 
