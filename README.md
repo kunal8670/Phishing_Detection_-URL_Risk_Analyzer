@@ -237,7 +237,7 @@ docker compose exec backend python services/update_threat_db.py
 # 1. Generate dataset
 python prepare_data.py
 
-# 2. Run training notebook
+# 2. Run training notebook or open fron jupyter from ui 
 cd backend/models
 jupyter nbconvert --to notebook --execute model_training.ipynb --output model_training.ipynb
 
@@ -256,4 +256,10 @@ docker compose restart backend
 | **Password** | `12345` |
 
 After connecting: **threats_db → Schemas → public → Tables → malicious_domains**
-# Phishing_Detection_-URL_Risk_Analyzer
+
+---
+##### © 2026 Kunal Harshad Patil  
+For more learning resources and updates, connect with me:  
+[GitHub](https://github.com/kunal8670) • [LinkedIn](https://www.linkedin.com/in/kunal-patil-8733b528a/)
+
+---
